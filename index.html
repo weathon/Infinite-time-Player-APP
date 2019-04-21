@@ -14,12 +14,12 @@
             <h1>Infinite-time Player</h1>
         </div>
         <div data-role="content" id="content">
-            <input id="audio_file" type="file" accept="audio/*"/>
+            <input id="audio_file" type="file" accept="audio/*" />
             <audio id="audio_player"></audio>
-
+            <canvas id="bar" class="visualizer" width="800" height="100"></canvas>
+            <canvas id="circle" class="visualizer" width="800" height="300"></canvas>
         </div>
-        <script src="audio.js"></script>
-        <canvas class="visualizer" width="640" height="100"></canvas> 
+        <script src="./audio.js"></script>
 </body>
 
 </html>
