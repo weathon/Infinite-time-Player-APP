@@ -15,46 +15,7 @@ function mybeep(hz, type, loudness) {
     oscillator.stop(audioCtx.currentTime + 1);
 }
 
-function visual() {
-    // https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
-    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    var analyser = audioCtx.createAnalyser();
-    source = oscillator;
-    analyser.fftSize = 2048;
-    var bufferLength = analyser.frequencyBinCount;
-    var dataArray = new Uint8Array(bufferLength);
-    analyser.getByteTimeDomainData(dataArray);
 
-    analyser.fftSize = 256;
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
-    var dataArray = new Uint8Array(bufferLength);
-
-    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-    function draw() {
-        drawVisual = requestAnimationFrame(draw);
-
-        analyser.getByteFrequencyData(dataArray);
-
-        canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        var barWidth = (WIDTH / bufferLength) * 2.5;
-        var barHeight;
-        var x = 0;
-
-        for (var i = 0; i < bufferLength; i++) {
-            barHeight = dataArray[i] / 2;
-
-            canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-            canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
-
-            x += barWidth + 1;
-        }
-    };
-    draw();
-}
 audio_file.onchange = function () {
     var files = this.files;
     // console.log(files);
@@ -62,4 +23,59 @@ audio_file.onchange = function () {
     // console.log(file);
     audio_player.src = file;
     audio_player.play();
-};
+}
+
+
+
+function visual() {
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
+    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var analyser = audioCtx.createAnalyser();
+    // https://segmentfault.com/a/1190000011353930
+    //获取audio节点
+    var myAudio = document.getElementById("audio_player");
+    //创建音频源
+    var source = audioCtx.createMediaElementSource(myAudio);
+    source.connect(analyser);
+
+    analyser.fftSize = 2048;
+    var bufferLength = analyser.frequencyBinCount;
+    var dataArray = new Uint8Array(bufferLength);
+    console.log(dataArray);
+    analyser.getByteTimeDomainData(dataArray);
+
+    analyser.fftSize = 2048;
+    var bufferLength = analyser.fftSize;
+    var dataArray = new Uint8Array(bufferLength);
+    //github
+    var canvas = document.querySelector('.visualizer');
+    var canvasCtx = canvas.getContext("2d");
+    HEIGHT=500;
+    WIDTH=500;
+    canvasCtx.clearRect(0, 0,500, 500);
+    function draw() {
+
+        drawVisual = requestAnimationFrame(draw);
+        analyser.getByteTimeDomainData(dataArray);
+        canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+        canvasCtx.beginPath();
+        var sliceWidth = WIDTH * 1.0 / bufferLength;
+        var x = 0;
+        for (var i = 0; i < bufferLength; i++) {
+            var v = dataArray[i] / 128.0;
+            var y = v * HEIGHT / 2;
+            if (i === 0) {
+                canvasCtx.moveTo(x, y);
+            } else {
+                canvasCtx.lineTo(x, y);
+            }
+            x += sliceWidth;
+        }
+        canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        canvasCtx.stroke();
+    };
+draw();
+}
