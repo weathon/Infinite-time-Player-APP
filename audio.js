@@ -111,6 +111,7 @@ var calcTempo = function (buffer) {
     // console.log(audioData);
     console.log(mt);
     document.getElementById("audio_player").src = myfile;
+    document.getElementById("button").innerHTML='<button data-role="button" onclick="getData();">GO!</button>';
 
 }
 
