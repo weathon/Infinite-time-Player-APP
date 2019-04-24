@@ -20,7 +20,7 @@
             <!-- <canvas id="bar" class="visualizer" width="800" height="100"></canvas>
             <canvas id="circle" class="visualizer" width="800" height="300"></canvas> -->
             <select id="wave_type">
-                <option style="color: #b6b6b6" disabled selected>Please select a type of wave</option>
+                <option style="color: #b6b6b6" value="0" disabled selected>Please select a type of wave</option>
                 <option value="sine">Sine wave</option>
                 <option value="square">square wave</option>
                 <option value="triangle">triangle wave</option>
@@ -28,7 +28,7 @@
             </select>
             <!-- <div data-role="footer"> -->
                 <br/><br/><br/>
-                <button data-role="button" onclick="">GO!</button>
+                <button data-role="button" onclick="getData();">GO!</button>
             <!-- </div> -->
         </div>
         <script src="./audio.js"></script>
